@@ -1,0 +1,76 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://Crater.tscn" type="PackedScene" id=1]
+[ext_resource path="res://Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://Main.gd" type="Script" id=3]
+[ext_resource path="res://dust-1.png" type="Texture" id=4]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends RigidBody2D
+
+
+# Declare member variables here. Examples:
+export var min_speed = 150  # Minimum speed range.
+export var max_speed = 250  # Maximum speed range.
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	var mob_types = $AnimatedSprite.frames.get_animation_names()
+	$AnimatedSprite.animation = mob_types[randi() % mob_types.size()]
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+#func _process(delta):
+#	pass
+
+
+func _on_VisibilityNotifier2D_screen_exited():
+	queue_free()
+"
+
+[sub_resource type="StreamTexture" id=2]
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ SubResource( 2 ) ],
+"loop": true,
+"name": "walk",
+"speed": 3.0
+} ]
+
+[sub_resource type="RectangleShape2D" id=4]
+
+[sub_resource type="PackedScene" id=5]
+_bundled = {
+"conn_count": 1,
+"conns": PoolIntArray( 1073741828, 1073741827, 17, 16, 2, 0 ),
+"editable_instances": [  ],
+"names": PoolStringArray( "Mob", "RigidBody2D", "collision_mask", "gravity_scale", "script", "__meta__", "AnimatedSprite", "AnimatedSprite", "frames", "animation", "playing", "CollisionShape2D", "CollisionShape2D", "shape", "VisibilityNotifier2D", "VisibilityNotifier2D", "_on_VisibilityNotifier2D_screen_exited", "screen_exited" ),
+"node_count": 4,
+"node_paths": [ NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("VisibilityNotifier2D") ],
+"nodes": PoolIntArray( -1, -1, 1, 0, -1, 4, 2, 0, 3, 1, 4, 2, 5, 3, 0, 1073741824, 0, 7, 6, -1, 3, 8, 4, 9, 5, 10, 6, 0, 1073741825, 0, 12, 11, -1, 1, 13, 7, 0, 1073741826, 0, 15, 14, -1, 0, 0 ),
+"variants": [ 0, 0.0, SubResource( 1 ), {
+"_edit_group_": true
+}, SubResource( 3 ), "walk", true, SubResource( 4 ) ],
+"version": 2
+}
+
+[node name="Main" type="YSort"]
+script = ExtResource( 3 )
+Mob = SubResource( 5 )
+
+[node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 1.5, 1.58333 )
+texture = ExtResource( 4 )
+centered = false
+region_enabled = true
+region_rect = Rect2( 0, 0, 320, 240 )
+
+[node name="YSort" type="YSort" parent="."]
+
+[node name="Player" parent="YSort" instance=ExtResource( 2 )]
+position = Vector2( 13, 23 )
+
+[node name="Crater" parent="YSort" instance=ExtResource( 1 )]
+position = Vector2( 80, 24 )
